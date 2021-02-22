@@ -3,9 +3,14 @@ import sys
 
 
 class EntryData:
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, entry):
+        self.data = entry
 
+        var = self.data.split(";@!")
+
+
+    def printData(self):
+        print(self.data)
 
 def main(argv):
     inputfile = ''
@@ -32,7 +37,7 @@ def main(argv):
 
     if inputfile != "":
         try:
-            csvFile = open(inputfile, "r")  # opening the file in read mode
+            csvFile = open(inputfile, mode="r")  # opening the file in read mode
             lines = csvFile.read()  # reading the file and splitting into lines
             # titles = lines[0].replace('"', '').split(",")  # isolating titles/columns
             # columns = len(titles)
@@ -45,17 +50,26 @@ def main(argv):
                 else:
                     break
 
-            lines = lines.replace(titles, "").replace("\n", "").replace('"', '').split(",")
+            lines = lines.replace(titles, "").replace("\n", " ").replace('"', '').split(",")
 
             titles = titles.replace('"', '').split(",")
 
-            data = ""
+            print(titles)
+
+            EntryObjects = list()
+            entry = ""
             index = 0
             for x in lines:
-                data += x
+                entry += x +";@!"
                 index += 1
                 if index % (len(titles) - 1) == 0:
-                    EntryData(data)
+                    EntryObjects.append(EntryData(entry))
+                    entry = ""
+
+            for x in EntryObjects:
+                x.printData()
+
+
 
 
 
