@@ -2,15 +2,18 @@ import getopt
 import sys
 
 
-class EntryData:
-    def __init__(self, entry):
-        self.data = entry
+class CalendarEntry:
+    def __init__(self, titles, entries):
+        self.titleData = {}
 
-        var = self.data.split(";@!")
+        for titleIndex in range(len(titles)):
+            self.titleData[titles[titleIndex]] = entries.split(";@!")[titleIndex]
 
+        # var = self.data.split(";@!")
 
     def printData(self):
-        print(self.data)
+        print(self.titleData)
+
 
 def main(argv):
     inputfile = ''
@@ -60,18 +63,14 @@ def main(argv):
             entry = ""
             index = 0
             for x in lines:
-                entry += x +";@!"
+                entry += x + ";@!"
                 index += 1
                 if index % (len(titles) - 1) == 0:
-                    EntryObjects.append(EntryData(entry))
+                    EntryObjects.append(CalendarEntry(titles, entry))
                     entry = ""
 
             for x in EntryObjects:
                 x.printData()
-
-
-
-
 
         except Exception:
             print("Could not open the file.")
