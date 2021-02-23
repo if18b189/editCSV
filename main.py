@@ -2,8 +2,61 @@ import getopt
 import sys
 
 
+class Calendar:
+    """
+    Summarizes all entries.
+
+    Attributes:
+
+    """
+
+    def __init__(self, csvFileInput):
+        self.titles = []
+        self.entries = []
+
+        titles = ""
+
+        for lines in csvFileInput:
+            if lines != "\n":
+                titles += lines
+            else:
+                break
+
+        lines = csvFileInput.replace(titles, "").replace("\n", " ").replace('"', '').split(",")
+
+        self.titles = titles.replace('"', '').split(",")
+
+        print(titles)
+
+        entry = ""
+        index = 0
+        for lines in lines:
+            entry += lines + ";@!"
+            index += 1
+            if index % (len(titles) - 1) == 0:
+                self.entries.append(CalendarEntry(titles, entry))
+                entry = ""
+
+    def printCalendar(self):
+        for entry in self.entries:
+            print(entry)
+
+
 class CalendarEntry:
+    """
+    A single entry.
+
+    Attributes:
+
+    """
+
     def __init__(self, titles, entries):
+        """
+        The constructor for CalendarEntry class.
+
+        Parameters:
+
+        """
         self.titleData = {}
 
         for titleIndex in range(len(titles)):
@@ -45,36 +98,9 @@ def main(argv):
             # titles = lines[0].replace('"', '').split(",")  # isolating titles/columns
             # columns = len(titles)
 
-            titles = ""
-
-            for x in lines:
-                if x != "\n":
-                    titles += x
-                else:
-                    break
-
-            lines = lines.replace(titles, "").replace("\n", " ").replace('"', '').split(",")
-
-            titles = titles.replace('"', '').split(",")
-
-            print(titles)
-
-            EntryObjects = list()
-            entry = ""
-            index = 0
-            for x in lines:
-                entry += x + ";@!"
-                index += 1
-                if index % (len(titles) - 1) == 0:
-                    EntryObjects.append(CalendarEntry(titles, entry))
-                    entry = ""
-
-            for x in EntryObjects:
-                x.printData()
-
-        except Exception:
-            print("Could not open the file.")
-            raise
+        except OSError:
+            print("Could not open/read file:", inputfile)
+            sys.exit()
 
 
 if __name__ == "__main__":
